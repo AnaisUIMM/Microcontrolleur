@@ -1,0 +1,36 @@
+#include <SPI.h>
+#include <MFRC522.h>
+// Affectation des broches
+#define RST_PIN 9
+#define SS_PIN 10
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+const int metalSensorPin = 2; // Pin où le VMA313 est connecté
+//pinMode(metalSensorPin, INPUT); // Définir le pin du capteur comme entrée
+void setup() {
+ // Initialisation du Module RFID
+ Serial.begin(9600);
+ while (!Serial);
+ SPI.begin();
+ mfrc522.PCD_Init();
+ delay(4);
+ mfrc522.PCD_DumpVersionToSerial(); // Affichage des données de la bibliothèque
+ Serial.println(F("Scan PICC to see UID, type, and data blocks..."));
+}
+void loop() {
+ // Attente d'une carte RFID
+ if ( ! mfrc522.PICC_IsNewCardPresent()) {
+ return;
+ }
+ int sensorValue = digitalRead(metalSensorPin); // Lire la valeur du capteur
+  Serial.print("Valeur du capteur : ");
+  Serial.println(sensorValue); // Afficher la valeur lue
+  delay(10); // Attendre 1 seconde avant la prochaine lecture
+ // Récupération des informations de la carte RFID
+ //if ( ! mfrc522.PICC_ReadCardSerial()) {
+ //return;
+ //}
+ // Affichage des informations de la carte RFID
+// mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
+}
+
+ 
